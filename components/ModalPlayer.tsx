@@ -2,6 +2,7 @@ import ReactPlayer from 'react-player/lazy';
 import { PlusIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon, XIcon } from '@heroicons/react/outline';
 import { FaPlay } from 'react-icons/fa';
 import { useState } from 'react';
+import { playerUrl } from '../constants/movie';
 
 interface Props {
   trailer: string;
@@ -12,7 +13,7 @@ function ModalPlayer({ trailer }: Props) {
   return (
     <div className='relative pt-[56.25%]'>
       <ReactPlayer
-        url={`https://www.youtube.com/watch?v=${trailer}`}
+        url={`${playerUrl}${trailer}`}
         width='100%'
         height='100%'
         style={{ position: 'absolute', top: '0', left: '0' }}
