@@ -1,12 +1,18 @@
 import { useRecoilState } from 'recoil';
 import { movieState } from '../atoms/modalAtoms';
 import { useEffect, useState } from 'react';
-import { Element, Genre } from '../typings';
+import { Element, Genre, Movie } from '../typings';
+import useAuth from './useAuth';
+import { collection, DocumentData, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export default function useMovies() {
   const [movie, setMovie] = useRecoilState(movieState);
   const [trailer, setTrailer] = useState('');
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [movies, setMovies] = useState<DocumentData[] | Movie[]>([]);
+  const [addedToList, setAddedToList] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!movie) return;
@@ -31,5 +37,15 @@ export default function useMovies() {
     fetchMovie();
   }, [movie]);
 
-  return { trailer, genres };
+  //movies in users list
+  useEffect(() => {
+    if (user) {
+      return onSnapshot(collection(db, 'customers', user.uid, 'myList'), (snapshot) => setMovies(snapshot.docs));
+    }
+  }, [db, movie?.id]);
+
+  // check if movie in list
+  useEffect(() => setAddedToList(movies.findIndex((result) => result.data().id === movie?.id) !== -1), [movies]);
+
+  return { trailer, genres, movie, addedToList, user };
 }

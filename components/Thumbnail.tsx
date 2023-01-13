@@ -3,12 +3,10 @@ import { Movie } from '../typings';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../atoms/modalAtoms';
 import { thumbUrl } from '../constants/movie';
+import { DocumentData } from 'firebase/firestore';
 
 interface Props {
-  movie: Movie;
-
-  // With Firebase
-  // Movie || DocumentData
+  movie: Movie | DocumentData;
 }
 
 function Thumbnail({ movie }: Props) {
